@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Sabahat Momina — Lead UX Designer</title>
+<meta name="description" content="Lead UX Designer working across Arabic and English. Health products, research, and type that has to work in two directions.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500&family=Newsreader:opsz,wght@6..72,300;6..72,400&display=swap" rel="stylesheet">
+
+<style>
+/* ---------------------------------------------------------------
+   TOKENS
+   Every colour and size lives here. Change a value in this block
+   and it updates everywhere on the site. Nothing below this block
+   hardcodes a colour.
+   --------------------------------------------------------------- */
+:root {
+  --paper:  #FBFAF7;   /* page background */
+  --ink:    #14181B;   /* primary text   */
+  --muted:  #6E7579;   /* secondary text */
+  --rule:   #D5D8D4;   /* hairlines      */
+  --accent: #1A5E5A;   /* the node, links */
+
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --sans:  "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --measure: 34rem;    /* max line length for reading text */
+  --gutter:  clamp(1.5rem, 6vw, 6rem);
+}
+
+/* Dark palette, defined once and applied in two situations below. */
+@media (prefers-color-scheme: dark) {
+  /* The reader's system is dark and they haven't chosen otherwise. */
+  :root:not([data-theme="light"]) {
+    --paper:  #101314;
+    --ink:    #EDEDE8;
+    --muted:  #8E9599;
+    --rule:   #2A2F30;
+    --accent: #5FB3AC;
+  }
+}
+
+/* The reader has chosen dark using the toggle. */
+:root[data-theme="dark"] {
+  --paper:  #101314;
+  --ink:    #EDEDE8;
+  --muted:  #8E9599;
+  --rule:   #2A2F30;
+  --accent: #5FB3AC;
+}
+
+/* TO FORCE LIGHT FOR EVERYONE ON FIRST VISIT:
+   in the script at the bottom of this file, change
+   the line   const initial = stored || system;
+   to         const initial = stored || "light";          */
+
+/* ---------------------------------------------------------------
+   BASE
+   --------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: clamp(1rem, 0.96rem + 0.2vw, 1.0625rem);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Keyboard focus is designed, not left to the browser default. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* ---------------------------------------------------------------
+   LAYOUT
+   --------------------------------------------------------------- */
+.page {
+  position: relative;
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: clamp(4rem, 14vh, 9rem) var(--gutter) 6rem;
+}
+
+/* ---------------------------------------------------------------
+   THEME TOGGLE
+   The motif again: a line with the node sliding along it.
+   Node left is light, node right is dark.
+   --------------------------------------------------------------- */
+.theme {
+  position: absolute;
+  top: clamp(1.75rem, 4vh, 2.75rem);
+  right: var(--gutter);
+  width: 46px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+/* the line */
+.theme::before {
+  content: "";
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+}
+
+/* the node */
+.theme::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  margin-top: -3.5px;
+  border-radius: 50%;
+  background: var(--accent);
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root[data-theme="dark"] .theme::after { transform: translateX(39px); }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme::after { transform: translateX(39px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme::after { transition: none; }
+}
+
+/* ---------------------------------------------------------------
+   HERO
+   --------------------------------------------------------------- */
+.name {
+  font-family: var(--serif);
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-size: clamp(2.75rem, 1.6rem + 5.2vw, 5.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.022em;
+  margin: 0;
+}
+
+.role {
+  margin: 0.85rem 0 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------
+   THE LINE AND THE NODE
+   The signature motif. Derived from Arabic i'jam — the dots that
+   sit against the connecting baseline. A line with one node on it.
+   Reused as a section marker further down the page.
+   --------------------------------------------------------------- */
+.rule {
+  position: relative;
+  height: 1px;
+  margin: clamp(2.5rem, 6vh, 4rem) 0;
+  background: var(--rule);
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: draw 1000ms cubic-bezier(0.22, 1, 0.36, 1) 150ms forwards;
+}
+
+.rule .node {
+  position: absolute;
+  top: 50%;
+  left: 38%;
+  width: 7px;
+  height: 7px;
+  margin-top: -3.5px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0;
+  animation: appear 420ms cubic-bezier(0.22, 1, 0.36, 1) 1050ms forwards;
+}
+
+/* A quieter instance of the same motif, used to open a section. */
+.rule--short { width: 5.5rem; margin-bottom: 1.75rem; }
+.rule--short .node { left: 0; }
+
+@keyframes draw   { to { transform: scaleX(1); } }
+@keyframes appear { to { opacity: 1; } }
+
+/* Anyone who has asked their system to reduce motion sees the
+   finished state immediately, with no animation at all. */
+@media (prefers-reduced-motion: reduce) {
+  .rule, .rule .node { animation: none; transform: scaleX(1); opacity: 1; }
+}
+
+/* ---------------------------------------------------------------
+   STATEMENT
+   --------------------------------------------------------------- */
+.statement {
+  font-family: var(--serif);
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-size: clamp(1.5rem, 1.1rem + 1.7vw, 2.375rem);
+  line-height: 1.28;
+  letter-spacing: -0.012em;
+  max-width: 24ch;
+  margin: 0;
+}
+
+.proof {
+  max-width: var(--measure);
+  margin: 1.75rem 0 0;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------
+   WORK
+   --------------------------------------------------------------- */
+.work { margin-top: clamp(5rem, 14vh, 9rem); }
+
+.work-label {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.project {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  padding: 2rem 0;
+  border-top: 1px solid var(--rule);
+  transition: border-color 220ms ease;
+}
+.project:last-of-type { border-bottom: 1px solid var(--rule); }
+
+.project:hover,
+.project:focus-visible { border-color: var(--accent); }
+
+.project-title {
+  font-family: var(--serif);
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-size: clamp(1.375rem, 1.1rem + 1.1vw, 1.875rem);
+  line-height: 1.2;
+  letter-spacing: -0.014em;
+  margin: 0;
+}
+
+.project-outcome {
+  max-width: var(--measure);
+  margin: 0.6rem 0 0;
+  color: var(--muted);
+}
+
+/* The number that should stop a scroll. Set large, left alone. */
+.project-figure {
+  font-family: var(--serif);
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-size: clamp(2rem, 1.4rem + 2.6vw, 3.25rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 1.5rem 0 0;
+  color: var(--ink);
+}
+
+.project-figure span {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--muted);
+  margin-top: 0.6rem;
+}
+
+/* ---------------------------------------------------------------
+   FOOTER
+   --------------------------------------------------------------- */
+.foot {
+  margin-top: clamp(5rem, 12vh, 8rem);
+  font-size: 0.9375rem;
+  color: var(--muted);
+}
+
+.foot a {
+  color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+</style>
+</head>
+
+<body>
+<main class="page">
+
+  <button class="theme" type="button" aria-label="Switch between light and dark"></button>
+
+  <h1 class="name">Sabahat Momina</h1>
+  <p class="role">Lead UX Designer</p>
+
+  <div class="rule"><span class="node"></span></div>
+
+  <p class="statement">I read between the lines. In the research, in the data, and in what people don&rsquo;t quite say.</p>
+
+  <p class="proof">Arabic and English. Health products, usability research, and type that has to work in two directions.</p>
+
+  <section class="work">
+    <div class="rule rule--short"><span class="node"></span></div>
+    <p class="work-label">Selected work</p>
+
+    <a class="project" href="#">
+      <h2 class="project-title">A diabetes platform, audited and rebuilt</h2>
+      <p class="project-outcome">A live telehealth product in Saudi Arabia. The team had a roadmap. The evidence disagreed with four items on it.</p>
+      <p class="project-figure">Eight tasks. Zero completions.<span>Usability study, redesign, and what the research changed</span></p>
+    </a>
+  </section>
+
+  <footer class="foot">
+    <p>Test page. <a href="mailto:hello@example.com">Contact</a></p>
+  </footer>
+
+</main>
+
+<script>
+/* Theme toggle.
+   On first visit the page follows the reader's system setting.
+   Once they use the toggle, their choice is remembered on their
+   own device. Nothing is sent anywhere. */
+(function () {
+  var root = document.documentElement;
+  var btn  = document.querySelector(".theme");
+
+  function read() {
+    try { return localStorage.getItem("theme"); } catch (e) { return null; }
+  }
+  function write(value) {
+    try { localStorage.setItem("theme", value); } catch (e) {}
+  }
+
+  var stored = read();
+  var system = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  var initial = stored || system;
+
+  root.setAttribute("data-theme", initial);
+
+  btn.addEventListener("click", function () {
+    var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    write(next);
+  });
+})();
+</script>
+</body>
+</html>
